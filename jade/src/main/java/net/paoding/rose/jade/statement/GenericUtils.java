@@ -41,6 +41,8 @@ public class GenericUtils {
                 } else if (actualType instanceof GenericArrayType) {
                     Type componentType = ((GenericArrayType) actualType).getGenericComponentType();
                     actualClasses[i] = Array.newInstance((Class<?>) componentType, 0).getClass();
+                } else if (actualType instanceof ParameterizedType) {
+                	actualClasses[i] = (Class<?>)((ParameterizedType)actualType).getRawType();
                 }
             }
 

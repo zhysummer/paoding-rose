@@ -200,8 +200,17 @@ public class JadeBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
      */
     private String cacheProviderName;
 
+	/**
+     * jadeComponentProvider
+     */
+	private JadeComponentProvider jadeComponentProvider;
+	
     // ------------------------------
 
+	public void setJadeComponentProvider(JadeComponentProvider jadeComponentProvider) {
+        this.jadeComponentProvider = jadeComponentProvider;
+    }
+	
     public DataAccessFactory getDataAccessFactory(ConfigurableListableBeanFactory beanFactory) {
         if (this.dataAccessFactory == null) {
             dataAccessFactory = new DataAccessFactoryAdapter(//
@@ -359,7 +368,9 @@ public class JadeBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
      */
     private void findJadeDAODefinitions(ConfigurableListableBeanFactory beanFactory,
             List<String> urls) {
-        JadeComponentProvider provider = new JadeComponentProvider();
+		if(jadeComponentProvider == null){
+			jadeComponentProvider = new JadeComponentProvider();
+		}
         Set<String> daoClassNames = new HashSet<String>();
 
         for (String url : urls) {
@@ -367,7 +378,7 @@ public class JadeBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
                 logger.info("[jade] call 'jade/find'");
             }
 
-            Set<BeanDefinition> dfs = provider.findCandidateComponents(url);
+            Set<BeanDefinition> dfs = jadeComponentProvider.findCandidateComponents(url);
             if (logger.isInfoEnabled()) {
                 logger.info("[jade] found " + dfs.size() + " beanDefinition from '" + url + "'");
             }
